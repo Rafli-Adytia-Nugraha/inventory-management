@@ -16,3 +16,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+// Inventory Management -> Inventory Tracking
+
+Route::get('/inventory-tracking', [InventoryTrackingController::class, 'index'])->name('inventory-tracking.index');
+Route::post('/inventory-tracking/{id}/adjust-stock', [InventoryTrackingController::class, 'adjustStock'])->name('inventory-tracking.adjust-stock');
+Route::get('/inventory-tracking/{id}/stock-movements', [InventoryTrackingController::class, 'viewStockMovements'])->name('inventory-tracking.stock-movements');
+Route::get('/inventory-tracking/availability-report', [InventoryTrackingController::class, 'viewAvailabilityReport'])->name('inventory-tracking.availability-report');
