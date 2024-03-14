@@ -38,9 +38,9 @@
                             Stock Management
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Inventory & Adjust Stock</a></li>
-                            <li><a class="dropdown-item" href="#">Stock Movements</a></li>
-                            <li><a class="dropdown-item" href="#">Availability Reports</a></li>
+                            <li><a class="dropdown-item" href="/stock-management">Transfer Stock</a></li>
+                            <li><a class="dropdown-item" href="/stock-management/reconcile-stock">Reconcile Stock</a></li>
+                            <li><a class="dropdown-item" href="/stock-management/stock-transfers">Stock Transfers Reports</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
