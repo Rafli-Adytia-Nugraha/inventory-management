@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\StockMovement;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
 class InventoryItem extends Model
 {
@@ -16,4 +17,9 @@ class InventoryItem extends Model
         'quantity_on_hand',
         'unit_price',
     ];
+
+    public function adjustments()
+    {
+        return $this->hasMany(StockMovement::class);
+    }
 }
