@@ -46,23 +46,11 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                             aria-expanded="false">
-                            Purchase Orders
+                            Procurement
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Inventory & Adjust Stock</a></li>
-                            <li><a class="dropdown-item" href="#">Stock Movements</a></li>
-                            <li><a class="dropdown-item" href="#">Availability Reports</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            Purchase Transactions
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Inventory & Adjust Stock</a></li>
-                            <li><a class="dropdown-item" href="#">Stock Movements</a></li>
-                            <li><a class="dropdown-item" href="#">Availability Reports</a></li>
+                            <li><a class="dropdown-item" href="/purchase-orders">Purchase Orders</a></li>
+                            <li><a class="dropdown-item" href="/">Purchase Transactions</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">

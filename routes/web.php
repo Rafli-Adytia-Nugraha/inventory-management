@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\StockManagementController;
 use App\Http\Controllers\InventoryTrackingController;
 
@@ -39,3 +40,13 @@ Route::post('/stock-management/transfer-stock', [StockManagementController::clas
 Route::get('/stock-management/reconcile-stock', [StockManagementController::class, 'reconcileStockForm'])->name('stock.reconcile.form');
 Route::post('/stock-management/reconcile-stock', [StockManagementController::class, 'reconcileStock'])->name('stock.reconcile');
 Route::get('/stock-management/stock-transfers', [StockManagementController::class, 'viewStockTransfers'])->name('stock.transfers');
+
+// Procurement -> Purchase Orders
+
+Route::get('/purchase-orders', [PurchaseOrderController::class, 'index'])->name('purchase-orders.index');
+Route::get('/purchase-orders/create', [PurchaseOrderController::class, 'create'])->name('purchase-orders.create');
+Route::post('/purchase-orders', [PurchaseOrderController::class, 'store'])->name('purchase-orders.store');
+Route::get('/purchase-orders/{id}', [PurchaseOrderController::class, 'show'])->name('purchase-orders.show');
+Route::get('/purchase-orders/{id}/edit', [PurchaseOrderController::class, 'edit'])->name('purchase-orders.edit');
+Route::put('/purchase-orders/{id}', [PurchaseOrderController::class, 'update'])->name('purchase-orders.update');
+Route::delete('/purchase-orders/{id}', [PurchaseOrderController::class, 'destroy'])->name('purchase-orders.destroy');
