@@ -16,10 +16,16 @@ class InventoryItem extends Model
         'description',
         'quantity_on_hand',
         'unit_price',
+        'warehouse_id'
     ];
 
     public function adjustments()
     {
         return $this->hasMany(StockMovement::class);
+    }
+
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class);
     }
 }
