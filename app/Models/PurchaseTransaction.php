@@ -21,12 +21,12 @@ class PurchaseTransaction extends Model
         'order_id',
     ];
 
-    public function item()
+    public function inventoryItem()
     {
         return $this->belongsTo(InventoryItem::class);
     }
 
-    public function order()
+    public function purchaseOrder()
     {
         return $this->belongsTo(PurchaseOrder::class);
     }

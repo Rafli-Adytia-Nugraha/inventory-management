@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\StockManagementController;
 use App\Http\Controllers\InventoryTrackingController;
+use App\Http\Controllers\PurchaseTransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,9 +45,13 @@ Route::get('/stock-management/stock-transfers', [StockManagementController::clas
 // Procurement -> Purchase Orders
 
 Route::get('/purchase-orders', [PurchaseOrderController::class, 'index'])->name('purchase-orders.index');
-Route::get('/purchase-orders/create', [PurchaseOrderController::class, 'create'])->name('purchase-orders.create');
 Route::post('/purchase-orders', [PurchaseOrderController::class, 'store'])->name('purchase-orders.store');
-Route::get('/purchase-orders/{id}', [PurchaseOrderController::class, 'show'])->name('purchase-orders.show');
-Route::get('/purchase-orders/{id}/edit', [PurchaseOrderController::class, 'edit'])->name('purchase-orders.edit');
 Route::put('/purchase-orders/{id}', [PurchaseOrderController::class, 'update'])->name('purchase-orders.update');
 Route::delete('/purchase-orders/{id}', [PurchaseOrderController::class, 'destroy'])->name('purchase-orders.destroy');
+
+// Procurement -> Purchase Transactions
+
+Route::post('/purchase-transactions', [PurchaseTransactionController::class, 'store'])->name('purchase-transactions.store');
+Route::get('/purchase-transactions', [PurchaseTransactionController::class, 'index'])->name('purchase-transactions.index');
+Route::put('/purchase-transactions/{id}', [PurchaseTransactionController::class, 'update'])->name('purchase-transactions.update');
+Route::delete('/purchase-transactions/{id}', [PurchaseTransactionController::class, 'destroy'])->name('purchase-transactions.destroy');

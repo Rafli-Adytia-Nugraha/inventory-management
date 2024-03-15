@@ -50,7 +50,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="/purchase-orders">Purchase Orders</a></li>
-                            <li><a class="dropdown-item" href="/">Purchase Transactions</a></li>
+                            <li><a class="dropdown-item" href="/purchase-transactions">Purchase Transactions</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
