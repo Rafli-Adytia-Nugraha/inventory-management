@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Warehouse extends Model
 {
@@ -18,6 +18,6 @@ class Warehouse extends Model
 
     public function inventoryItems()
     {
-        return $this->hasMany(InventoryItem::class);
+        return $this->hasMany(InventoryItem::class, 'warehouse_id', 'id');
     }
 }

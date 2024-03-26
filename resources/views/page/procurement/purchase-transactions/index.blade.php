@@ -1,8 +1,90 @@
-@extends('layouts.main-layout')
-@section('title', 'Procurement')
+@extends('layouts.dashboard')
+@section('title', 'Procurement | Velzon')
+@section('sub-title', 'Purchase Transactions')
 @section('content')
-    <h1>Purchase Transaction</h1>
-    <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#createModal">Create Order</button>
+
+    <div class="row">
+        <div class="col-xxl-4">
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <h4 class="card-title flex-grow-1 mb-0">Purchase Transactions</h4>
+                    <div class="d-flex align-items-center">
+                        <form action="" class="input-group">
+                            <input type="text" name="search" class="form-control" placeholder="Search...">
+                            <button class="btn btn-outline-secondary" type="submit">
+                                Search
+                            </button>
+                        </form>
+                        <button href="" class="btn btn-soft-success btn-sm ms-2" data-bs-toggle="modal"
+                            data-bs-target="#createModal">Create Order</button>
+                    </div>
+                </div>
+            </div><!-- end cardheader -->
+            <div class="card-body">
+                <div class="table-responsive table-card">
+                    <table class="table table-nowrap table-centered align-middle">
+                        <thead class="bg-light text-muted">
+                            <tr>
+                                <th scope="col">No</th>
+                                <th scope="col">Item Name</th>
+                                <th scope="col">Order Date</th>
+                                <th scope="col">Transaction Date</th>
+                                <th scope="col">Quantity Purchased</th>
+                                <th scope="col">Unit Price</th>
+                                <th scope="col">Total Price</th>
+                                <th scope="col">Action</th>
+                            </tr><!-- end tr -->
+                        </thead><!-- thead -->
+
+                        <tbody>
+                            @foreach ($purchaseTransactions as $purchaseTransaction)
+                                <tr>
+                                    <th scope="row">{{ $loop->iteration }} </th>
+                                    <td>{{ $purchaseTransaction->inventoryItem['id'] }} </td>
+                                    <td>{{ $purchaseTransaction->purchaseOrder['id'] }}</td>
+                                    <td>{{ $purchaseTransaction['transaction_date'] }}</td>
+                                    <td>{{ $purchaseTransaction['quantity_purchased'] }}</td>
+                                    <td>{{ $purchaseTransaction['unit_price'] }}</td>
+                                    <td>{{ $purchaseTransaction['total_price'] }}</td>
+                                    <td>
+                                        <button type="button" class="badge badge-soft-info view-btn"
+                                            data-id="{{ $purchaseTransaction['id'] }}"
+                                            data-item-name="{{ $purchaseTransaction->inventoryItem['item_name'] }}"
+                                            data-order-date="{{ $purchaseTransaction->purchaseOrder['order_date'] }}"
+                                            data-transaction-date="{{ $purchaseTransaction['transaction_date'] }}"
+                                            data-quantity-purchased="{{ $purchaseTransaction['quantity_purchased'] }}"
+                                            data-unit-price="{{ $purchaseTransaction['unit_price'] }}"
+                                            data-total-price="{{ $purchaseTransaction['total_price'] }}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#showModal">View</button>
+
+                                        <button type="button" class="badge badge-soft-warning edit-btn"
+                                            data-id="{{ $purchaseTransaction['id'] }}"
+                                            data-item-id="{{ $purchaseTransaction->inventoryItem['id'] }}"
+                                            data-order-id="{{ $purchaseTransaction->purchaseOrder['id'] }}"
+                                            data-transaction-date="{{ $purchaseTransaction['transaction_date'] }}"
+                                            data-quantity-purchased="{{ $purchaseTransaction['quantity_purchased'] }}"
+                                            data-unit-price="{{ $purchaseTransaction['unit_price'] }}"
+                                            data-total-price="{{ $purchaseTransaction['total_price'] }}"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#editModal">Edit</button>
+
+                                        <button type="button" class="badge badge-soft-danger delete-btn" data-bs-toggle="modal"
+                                            data-bs-target="#deleteModal"
+                                            data-id="{{ $purchaseTransaction['id'] }}">Delete</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody><!-- end tbody -->
+                    </table><!-- end table -->
+                </div>
+                <div class="mt-3">
+                    {{ $purchaseTransactions->links() }}
+                </div>
+            </div><!-- end card body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
+
     {{-- Modal Create Transaction --}}
     <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -56,54 +138,6 @@
             </div>
         </div>
     </div>
-
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">No</th>
-                <th scope="col">Item Name</th>
-                <th scope="col">Order Date</th>
-                <th scope="col">Transaction Date</th>
-                <th scope="col">Quantity Purchased</th>
-                <th scope="col">Unit Price</th>
-                <th scope="col">Total Price</th>
-                <th scope="col">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($purchaseTransactions as $purchaseTransaction)
-                <tr>
-                    <th scope="row">{{ $loop->iteration }} </th>
-                    <td>{{ $purchaseTransaction->inventoryItem['id'] }} </td>
-                    <td>{{ $purchaseTransaction->purchaseOrder['id'] }}</td>
-                    <td>{{ $purchaseTransaction['transaction_date'] }}</td>
-                    <td>{{ $purchaseTransaction['quantity_purchased'] }}</td>
-                    <td>{{ $purchaseTransaction['unit_price'] }}</td>
-                    <td>{{ $purchaseTransaction['total_price'] }}</td>
-                    <td>
-                        <button type="button" class="btn btn-warning view-btn" data-id="{{ $purchaseTransaction['id'] }}"
-                            data-item-name="{{ $purchaseTransaction->inventoryItem['item_name'] }}"
-                            data-order-date="{{ $purchaseTransaction->purchaseOrder['order_date'] }}"
-                            data-transaction-date="{{ $purchaseTransaction['transaction_date'] }}"
-                            data-quantity-purchased="{{ $purchaseTransaction['quantity_purchased'] }}"
-                            data-unit-price="{{ $purchaseTransaction['unit_price'] }}"
-                            data-total-price="{{ $purchaseTransaction['total_price'] }}">View</button>
-
-                        <button type="button" class="btn btn-secondary edit-btn" data-id="{{ $purchaseTransaction['id'] }}"
-                            data-item-id="{{ $purchaseTransaction->inventoryItem['id'] }}"
-                            data-order-id="{{ $purchaseTransaction->purchaseOrder['id'] }}"
-                            data-transaction-date="{{ $purchaseTransaction['transaction_date'] }}"
-                            data-quantity-purchased="{{ $purchaseTransaction['quantity_purchased'] }}"
-                            data-unit-price="{{ $purchaseTransaction['unit_price'] }}"
-                            data-total-price="{{ $purchaseTransaction['total_price'] }}">View</button>
-
-                        <button type="button" class="btn btn-danger delete-btn" data-bs-toggle="modal"
-                            data-bs-target="#deleteModal" data-id="{{ $purchaseTransaction['id'] }}">Delete</button> |
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
 
     {{-- Modal Show --}}
     <div class="modal fade" id="showModal" tabindex="-1" aria-labelledby="showModalLabel" aria-hidden="true">
@@ -165,8 +199,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="quantity_purchased" class="form-label">Quantity Purchased:</label>
-                            <input type="number" class="form-control" id="editQuantityPurchased" name="quantity_purchased"
-                                required>
+                            <input type="number" class="form-control" id="editQuantityPurchased"
+                                name="quantity_purchased" required>
                         </div>
                         <div class="mb-3">
                             <label for="unit_price" class="form-label">Unit Price:</label>
@@ -248,7 +282,8 @@
                     document.getElementById('editQuantityPurchased').value = quantityPurchased;
                     document.getElementById('editUnitPrice').value = unitPrice;
                     document.getElementById('editTotalPrice').value = totalPrice;
-                    document.getElementById('editForm').action = editFormAction.replace(':id', transactionId);
+                    document.getElementById('editForm').action = editFormAction.replace(':id',
+                        transactionId);
 
                     const modal = new bootstrap.Modal(document.getElementById('editModal'));
                     modal.show();

@@ -2,15 +2,23 @@
 
 namespace Database\Seeders;
 
-use Carbon\Carbon;
-use Illuminate\Support\Str;
 use App\Models\InventoryItem;
+use App\Models\Warehouse;
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 
 class InventoryItemSeeder extends Seeder
 {
     public function run(): void
     {
+        Schema::disableForeignKeyConstraints();
+        InventoryItem::truncate();
+        Schema::enableForeignKeyConstraints();
+
+        $warehouses = Warehouse::all();
+
         $data = [
             [
                 'item_name' => 'Product A',
@@ -39,9 +47,12 @@ class InventoryItemSeeder extends Seeder
                 'description' => $value['description'],
                 'quantity_on_hand' => $value['quantity_on_hand'],
                 'unit_price' => $value['unit_price'],
+                'warehouse_id' => $warehouses->pluck('id')->random(),
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ]);
         }
+
+        // InventoryItem::factory()->count(20)->create();
     }
 }

@@ -22,4 +22,16 @@ class PurchaseOrder extends Model
     {
         return $this->belongsTo(Supplier::class);
     }
+
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['search'] ?? false, function ($query, $search) {
+            return $query->where('order_date', 'like', '%' . $search . '%')
+                ->orWhere('delivery_date', 'like', '%' . $search . '%')
+                ->orWhere('total_amount', 'like', '%' . $search . '%')
+                ->orWhereHas('supplier', function ($subquery) use ($search) {
+                    $subquery->where('supplier_name', 'like', '%' . $search . '%');
+                });
+        });
+    }
 }

@@ -10,6 +10,17 @@ use Illuminate\Http\Request;
 
 class PurchaseTransactionController extends Controller
 {
+    public function index()
+    {
+        $inventoryItems = InventoryItem::all();
+        $purchaseOrders = PurchaseOrder::all();
+        $purchaseTransactions = PurchaseTransaction::with('purchaseOrder', 'inventoryItem')
+            ->orderBy('transaction_date', 'desc')
+            ->paginate(10);
+
+        return view('page.procurement.purchase-transactions.index', compact('purchaseTransactions', 'inventoryItems', 'purchaseOrders'));
+    }
+
     public function store(PurchaseTransactionRequest $request)
     {
         $purchaseTransaction = PurchaseTransaction::create([
@@ -24,16 +35,6 @@ class PurchaseTransactionController extends Controller
         return redirect()->route('purchase-transactions.index')->with('success', 'Transaksi pembelian berhasil dicatat.');
     }
 
-    public function index()
-    {
-        $inventoryItems = InventoryItem::all();
-        $purchaseOrders = PurchaseOrder::all();
-        $purchaseTransactions = PurchaseTransaction::with('purchaseOrder', 'inventoryItem')
-            ->orderBy('transaction_date', 'desc')
-            ->paginate(10);
-
-        return view('page.procurement.purchase-transactions.index', compact('purchaseTransactions', 'inventoryItems', 'purchaseOrders'));
-    }
 
     public function update(Request $request, $id)
     {
