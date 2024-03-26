@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\InventoryItemExport;
+use App\Http\Requests\AdjustStockRequest;
 use App\Models\InventoryItem;
 use App\Models\StockMovement;
-use App\Exports\InventoryItemExport;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Http\Requests\AdjustStockRequest;
 
 class InventoryTrackingController extends Controller
 {
     public function index()
     {
-        $inventoryItems = InventoryItem::paginate(5);
+        $inventoryItems = InventoryItem::with('warehouse')->filter(request(['search']))->paginate(5);
+
         return view('page.inventory-management.inventory-tracking.index', compact('inventoryItems'));
     }
 
@@ -20,33 +21,33 @@ class InventoryTrackingController extends Controller
     {
         $inventoryItem = InventoryItem::findOrFail($id);
 
-        $adjustment = intval($request->input('quantity'));
-        $reason = $request->input('reason');
+        $adjustment = $request['quantity'] - $inventoryItem['quantity_on_hand'];
 
-        $newQuantity = $inventoryItem->quantity_on_hand + $adjustment;
-        $inventoryItem->update(['quantity_on_hand' => $newQuantity]);
+        $inventoryItem->update(['quantity_on_hand' => $request['quantity']]);
 
-        $stockMovement = new StockMovement([
+        StockMovement::create([
+            'inventory_item_id' => $id,
             'transaction_date' => now(),
             'quantity_adjusted' => $adjustment,
-            'reason' => $reason,
+            'reason' => $request['reason'],
         ]);
-
-        $inventoryItem->adjustments()->save($stockMovement);
 
         return redirect()->route('inventory-tracking.index')->with('success', 'Stock adjustment successfully made.');
     }
 
     public function viewStockMovements()
     {
-        $stockMovements = StockMovement::with('inventoryItem')->paginate(5);
+        $stockMovements = StockMovement::with('inventoryItem')
+            ->filter(request(['search']))
+            ->orderBy('transaction_date', 'desc')
+            ->paginate(5);
 
         return view('page.inventory-management.inventory-tracking.stock-movements', compact('stockMovements'));
     }
 
     public function viewAvailabilityReport()
     {
-        $inventoryItems = InventoryItem::paginate(5);
+        $inventoryItems = InventoryItem::filter(request(['search']))->paginate(5);
 
         $totalQuantity = $inventoryItems->sum('quantity_on_hand');
         $totalValue = $inventoryItems->sum(function ($item) {

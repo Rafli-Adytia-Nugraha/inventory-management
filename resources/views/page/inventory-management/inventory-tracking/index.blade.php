@@ -1,37 +1,66 @@
-@extends('layouts.main-layout')
-@section('title', 'Inventory Management')
+@extends('layouts.dashboard')
+@section('title', 'Inventory Management | Velzon')
+@section('sub-title', 'Inventory Tracking')
 
 @section('content')
-    <h1>Inventory Tracking</h1>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">No</th>
-                <th scope="col">Item Name</th>
-                <th scope="col">Description</th>
-                <th scope="col">Quantity on Hand</th>
-                <th scope="col">Unit Price</th>
-                <th scope="col">Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($inventoryItems as $item)
-                <tr>
-                    <th scope="row">{{ $loop->iteration }}</th>
-                    <td>{{ $item['item_name'] }}</td>
-                    <td>{{ $item['description'] }}</td>
-                    <td>{{ $item['quantity_on_hand'] }}</td>
-                    <td>{{ $item['unit_price'] }}</td>
-                    <td><button type="button" class="btn btn-info adjust-btn" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal" data-id="{{ $item->id }}">Adjust</button></td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-xxl-4">
+            <div class="card">
+                <div class="card-header d-flex align-items-center">
+                    <h4 class="card-title flex-grow-1 mb-0">Inventory Items</h4>
+                    <form action="{{ route('inventory-tracking.index') }}" class="input-group w-25">
+                        <input type="text" name="search" class="form-control" placeholder="Search...">
+                        <button class="btn btn-outline-secondary" type="submit">
+                            Search
+                        </button>
+                    </form>
+                </div>
+            </div><!-- end cardheader -->
+            <div class="card-body">
+                <div class="table-responsive table-card">
+                    <table class="table table-nowrap table-centered align-middle">
+                        <thead class="bg-light text-muted">
+                            <tr>
+                                <th scope="col">No</th>
+                                <th scope="col">Item Name</th>
+                                <th scope="col">Description</th>
+                                <th scope="col">Quantity on Hand</th>
+                                <th scope="col">Unit Price</th>
+                                <th scope="col">Warehouse</th>
+                                <th scope="col">Action</th>
+                            </tr><!-- end tr -->
+                        </thead><!-- thead -->
+
+                        <tbody>
+                            @foreach ($inventoryItems as $item)
+                                <tr>
+                                    <th scope="row">{{ $loop->iteration }}</th>
+                                    <td class="fw-medium">{{ $item['item_name'] }}</td>
+                                    <td class="text-reset">{{ $item['description'] }}</td>
+                                    <td class="text-muted">{{ $item['quantity_on_hand'] }}</td>
+                                    <td class="text-muted">{{ $item['unit_price_formatted'] }}</td>
+                                    <td class="text-muted">{{ $item->warehouse['name'] }}</td>
+                                    <td>
+                                        <button type="button" class="badge badge-soft-info adjust-btn"
+                                            data-bs-toggle="modal" data-bs-target="#adjustModal"
+                                            data-id="{{ $item['id'] }}"
+                                            data-quantity="{{ $item['quantity_on_hand'] }}">Adjust</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody><!-- end tbody -->
+                    </table><!-- end table -->
+                </div>
+                <div class="mt-3">
+                    {{ $inventoryItems->links() }}
+                </div>
+            </div><!-- end card body -->
+        </div><!-- end card -->
+    </div><!-- end col -->
 
 
-
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    {{-- Modal Adjust --}}
+    <div class="modal fade" id="adjustModal" tabindex="-1" aria-labelledby="adjustModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -39,68 +68,56 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="adjust-form" action="" method="POST">
+                    <form action=""
+                        id="adjustForm" method="POST">
                         @csrf
+                        @method('PUT')
                         <div class="input-group mb-3">
                             <span class="input-group-text">Quantity</span>
-                            <input type="number" id="quantity" name="quantity" class="form-control" aria-label="Quantity"
-                                aria-describedby="button-addon">
-                            <button class="btn btn-outline-danger" type="button" id="kurangBtn">-</button>
-                            <button class="btn btn-outline-primary" type="button" id="tambahBtn">+</button>
+                            <input type="number" id="adjustQuantity" name="quantity" class="form-control">
                         </div>
-                        @error('quantity')
-                            <div class="alert alert-danger">{{ $message }}</div>
-                        @enderror
                         <div class="form-floating">
                             <textarea class="form-control" id="reason" name="reason" rows="3" placeholder="Enter reason for adjustment"></textarea>
                             <label for="reason">Reason</label>
                         </div>
-                        @error('reason')
-                            <div class="alert alert-danger">{{ $message }}</div>
-                        @enderror
-                        <button type="submit" class="btn btn-primary form-control mt-4">Adjust Stock</button>
+                        <button type="submit" class="btn btn-primary mt-4">Submit</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-
-
 @endsection
 
 @section('js')
-
     <script>
-        $(document).ready(function() {
-            let angka = 0; // nilai awal
+        document.addEventListener("DOMContentLoaded", function() {
+            const adjustButtons = document.querySelectorAll('.adjust-btn');
+            adjustButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const quantity = this.getAttribute('data-quantity');
+                    const adjustFormAction = `{{ route('inventory-tracking.adjust-stock', ':id') }}`;
 
-            // Fungsi untuk menampilkan nilai pada input box
-            function updateNilai() {
-                $('#quantity').val(angka);
-            }
+                    document.getElementById('adjustQuantity').value = quantity;
+                    document.getElementById('adjustForm').action = adjustFormAction.replace(':id', id);
 
-            // Event saat tombol tambah diklik
-            $('#tambahBtn').click(function() {
-                angka++;
-                updateNilai();
-            });
-
-            // Event saat tombol kurang diklik
-            $('#kurangBtn').click(function() {
-                angka--;
-                updateNilai();
-            });
-
-            $('.adjust-btn').click(function() {
-                // Ambil ID dari atribut data-id
-                let itemId = $(this).data('id');
-
-                // Update URL formulir modal dengan ID yang sesuai
-                let formAction = "{{ route('inventory-tracking.adjust-stock', ['id' => ':id']) }}";
-                formAction = formAction.replace(':id', itemId);
-                $('#adjust-form').attr('action', formAction);
+                    const modal = new bootstrap.Modal(document.getElementById('adjustModal'));
+                    modal.show();
+                });
             });
         });
     </script>
+
+    @if (Session::has('success'))
+        <script>
+            Swal.fire({
+                icon: "success",
+                title: "Success!",
+                text: "{{ Session::get('success') }}",
+                showConfirmButton: false,
+                timer: 4000,
+            });
+        </script>
+    @endif
 @endsection

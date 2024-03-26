@@ -3,8 +3,8 @@
 namespace App\Exports;
 
 use App\Models\InventoryItem;
-use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class InventoryItemExport implements FromCollection, WithHeadings
 {
@@ -20,7 +20,7 @@ class InventoryItemExport implements FromCollection, WithHeadings
             'Item Name',
             'Description',
             'Quantity on Hand',
-            'Unit Price'
+            'Unit Price',
         ];
     }
 }

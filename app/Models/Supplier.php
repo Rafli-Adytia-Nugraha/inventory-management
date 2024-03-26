@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\PurchaseOrder;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,4 +15,9 @@ class Supplier extends Model
         'supplier_name',
         'contact_information',
     ];
+
+    public function purchaseOrders()
+    {
+        return $this->hasMany(PurchaseOrder::class);
+    }
 }
